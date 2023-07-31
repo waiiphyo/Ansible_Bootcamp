@@ -1,0 +1,24 @@
+---
+- name: Create a file with hostname information
+  hosts: all
+  gather_facts: yes
+
+  tasks:
+    - name: Create the file with hostname information
+      copy:
+        content: |
+          HOSTNAME = {{ ansible_hostname }}
+          KERNEL = {{ ansible_kernel }}
+          DISTRIBUTION = {{ ansible_distribution }}
+          DISTRIBUTION_VERSION = {{ ansible_distribution_version }}
+          CPU_CORES = {{ ansible_processor_cores }}
+          MEMORY_TOTAL (MB) = {{ ansible_memtotal_mb }}
+          DEFAULT_IPV4_ADDR = {{ ansible_default_ipv4.address }}
+        dest: /etc/{{ ansible_hostname }}.txt
+    
+    - name: Copy files from managed nodes to the control node
+      fetch:
+        src: /etc/{{ ansible_hostname }}.txt
+        dest: /tmp/managed_nodes/
+        flat: yes
+
