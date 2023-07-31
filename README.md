@@ -1,3 +1,3 @@
-##INSTRUCTOR
+## INSTRUCTOR
 
 ``` NAING YE MINN ```
