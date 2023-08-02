@@ -1,0 +1,24 @@
+---
+- name: Create User for automation
+  hosts: web
+  vars:
+    ssh_pub_key_file: keyfilepath
+    automation_user: automate
+
+  tasks:
+  - name: Create automate user
+    ansible.buildin.user:
+      name: "{{ automation_user }}"
+      state: present
+      shell: /bin/bash 
+
+  - name: assign automate user as password-less sudoer
+    ansible.buildin.copy:
+      content: "{{ automation_user }} ALL=(ALL) NOPASSWD: ALL"
+      dest: /etc/sudoers.d/{{ automation_user }}
+
+  - name: copy ssh-key to automate user
+    ansible.posixauthorized_key:
+      user: "{{ automation_user }}"
+      state: present
+      key: "{{ lookup('file', ssh_pub_key_file }}"
